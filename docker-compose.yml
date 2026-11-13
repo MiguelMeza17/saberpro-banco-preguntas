@@ -1,0 +1,8 @@
+# Orquestador multi-contenedor del Banco de Preguntas Saber Pro.
+# Los servicios (rabbitmq, base de datos, validation-service, question-service y lifecycle-service)
+# se agregan en el issue #10.
+name: saberpro
+
+networks:
+  saberpro-net:
+    driver: bridge
