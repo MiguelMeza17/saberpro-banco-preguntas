@@ -1,0 +1,15 @@
+package co.edu.unicauca.saberpro.validation;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * Arranque del microservicio validation-service (puerto 8082).
+ */
+@SpringBootApplication
+public class ValidationServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ValidationServiceApplication.class, args);
+    }
+}
