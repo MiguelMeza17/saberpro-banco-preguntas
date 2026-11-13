@@ -47,6 +47,11 @@ cd question-service
 
 ## Ejecutar con Docker
 
+Cada servicio tiene un `Dockerfile` multi-stage en su raíz: la primera etapa compila el `.jar` con Maven
+(equivale a `./mvnw clean package -DskipTests`) y la segunda lo ejecuta sobre `eclipse-temurin:17-jre`.
+No hace falta compilar antes a mano. Se usa `eclipse-temurin` porque `openjdk:17-jdk-slim`, la imagen
+de la guía, está descontinuada en Docker Hub.
+
 ```bash
 docker compose up -d --build
 docker ps
