@@ -1,0 +1,50 @@
+### GET /api/preguntas
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 18 Nov 2026 23:18:38 GMT
+
+[]
+
+### POST /api/preguntas (valida)
+HTTP/1.1 201 
+Location: http://localhost:8083/api/preguntas/1
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 18 Nov 2026 23:18:40 GMT
+
+{"id":1,"enunciado":"¿Qué patrón aísla el dominio de la infraestructura?","justificacion":"Los puertos y adaptadores separan el núcleo de la tecnología.","opciones":[{"texto":"Hexagonal","esCorrecta":true},{"texto":"Singleton","esCorrecta":false},{"texto":"Monolito","esCorrecta":false},{"texto":"Capas","esCorrecta":false}],"estado":"BORRADOR","observaciones":null}
+
+### POST /api/preguntas (justificación corta)
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 18 Nov 2026 23:18:40 GMT
+Connection: close
+
+{"estado":400,"error":"Regla de negocio","mensaje":"La justificación debe contener al menos 15 caracteres.","fecha":"2026-11-18T23:18:40.092964313Z"}
+
+### POST /api/preguntas (dos claves, la rechaza validation-service)
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 18 Nov 2026 23:18:40 GMT
+Connection: close
+
+{"estado":400,"error":"Regla de negocio","mensaje":"La pregunta no pasó la validación estructural: Debe existir exactamente 1 opción correcta (hay 2).","fecha":"2026-11-18T23:18:40.118449979Z"}
+
+### POST /api/preguntas/1/enviar-revision
+HTTP/1.1 202 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 18 Nov 2026 23:18:40 GMT
+
+{"id":1,"enunciado":"¿Qué patrón aísla el dominio de la infraestructura?","justificacion":"Los puertos y adaptadores separan el núcleo de la tecnología.","opciones":[{"texto":"Hexagonal","esCorrecta":true},{"texto":"Singleton","esCorrecta":false},{"texto":"Monolito","esCorrecta":false},{"texto":"Capas","esCorrecta":false}],"estado":"PENDIENTE_REVISION","observaciones":null}
+
+### GET http://localhost:8084/api/revisiones
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 18 Nov 2026 23:18:42 GMT
+
+[{"preguntaId":1,"enunciado":"¿Qué patrón aísla el dominio de la infraestructura?","revisor":"revisor1","estado":"EN_REVISION","fechaEnvio":"2026-11-18T23:18:40.203142919Z","recibidaEn":"2026-11-18T23:18:40.365260247Z"}]

@@ -1,0 +1,11 @@
+$ curl -u guest:guest http://localhost:15672/api/queues/%2F/pregunta.revisar.queue
+{
+  "name": "pregunta.revisar.queue",
+  "durable": true,
+  "state": "running",
+  "consumers": 1,
+  "messages_ready": 0,
+  "publish": 1,
+  "deliver_get": 1,
+  "ack": 1
+}

@@ -95,6 +95,11 @@ Variables que inyecta el compose (en local se usan los valores por defecto de `a
 - Revisiones recibidas por lifecycle-service: `GET http://localhost:8084/api/revisiones`.
 - Detener todo: `docker compose down` (añadir `-v` para borrar también los datos de PostgreSQL).
 
+## Evidencias de ejecución
+
+Salidas reales de Docker, RabbitMQ, las respuestas HTTP y el intercambio JPA ↔ memoria en
+[`docs/evidencias/`](docs/evidencias/README.md).
+
 ## Diagramas
 
 Fuentes Mermaid en `docs/diagramas/*.mmd` y exportados a PNG (mismo nombre) para el informe.
