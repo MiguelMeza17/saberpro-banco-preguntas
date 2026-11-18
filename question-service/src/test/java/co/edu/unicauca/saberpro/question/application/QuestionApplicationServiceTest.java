@@ -132,6 +132,15 @@ class QuestionApplicationServiceTest {
         void fallaSiLaPreguntaNoExiste() {
             assertThrows(PreguntaNoEncontradaException.class, () -> servicio.enviarARevision(99L));
         }
+
+        @Test
+        void siLaNotificacionFallaNoGuardaElCambioDeEstado() {
+            Long id = servicio.crear(comandoValido()).getId();
+            notificaciones.fallar = true;
+
+            assertThrows(IllegalStateException.class, () -> servicio.enviarARevision(id));
+            assertEquals(EstadoPregunta.BORRADOR, repositorio.findById(id).orElseThrow().getEstado());
+        }
     }
 
     @Nested
@@ -196,13 +205,18 @@ class QuestionApplicationServiceTest {
             if (pregunta.getId() == null) {
                 pregunta.asignarId(++secuencia);
             }
-            datos.put(pregunta.getId(), pregunta);
+            datos.put(pregunta.getId(), copiar(pregunta));
             return pregunta;
         }
 
         @Override
         public Optional<Pregunta> findById(Long id) {
-            return Optional.ofNullable(datos.get(id));
+            return Optional.ofNullable(datos.get(id)).map(RepositorioFalso::copiar);
+        }
+
+        private static Pregunta copiar(Pregunta p) {
+            return Pregunta.reconstituir(p.getId(), p.getEnunciado(), p.getJustificacion(), p.getOpciones(),
+                    p.getEstado(), p.getObservaciones());
         }
 
         @Override
@@ -215,9 +229,13 @@ class QuestionApplicationServiceTest {
     private static final class NotificacionesFalsas implements NotificacionPort {
 
         private final List<Long> enviadas = new ArrayList<>();
+        private boolean fallar;
 
         @Override
         public void notificarEnvioARevision(Pregunta pregunta) {
+            if (fallar) {
+                throw new IllegalStateException("broker caído");
+            }
             enviadas.add(pregunta.getId());
         }
     }

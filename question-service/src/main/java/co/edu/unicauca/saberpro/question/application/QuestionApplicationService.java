@@ -62,13 +62,17 @@ public class QuestionApplicationService implements CrearPreguntaUseCase, Evaluar
         return repositorio.save(pregunta);
     }
 
+    /**
+     * Envía la pregunta a revisión. Primero se notifica y después se guarda: si la notificación falla
+     * (por ejemplo, RabbitMQ caído) el cambio de estado no se persiste y el autor puede reintentar, en lugar de
+     * quedar una pregunta pendiente que nadie va a revisar.
+     */
     @Override
     public Pregunta enviarARevision(Long id) {
         Pregunta pregunta = obtener(id);
         pregunta.enviarARevision();
-        Pregunta guardada = repositorio.save(pregunta);
-        notificaciones.notificarEnvioARevision(guardada);
-        return guardada;
+        notificaciones.notificarEnvioARevision(pregunta);
+        return repositorio.save(pregunta);
     }
 
     @Override

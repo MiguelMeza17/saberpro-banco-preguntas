@@ -74,6 +74,15 @@ abstract class PreguntaRepositoryContrato {
     }
 
     @Test
+    void unCambioSinSaveNoSePersiste() {
+        Long id = servicio.crear(comando("¿Qué patrón aísla el dominio?")).getId();
+
+        repositorio.findById(id).orElseThrow().enviarARevision();
+
+        assertEquals(EstadoPregunta.BORRADOR, repositorio.findById(id).orElseThrow().getEstado());
+    }
+
+    @Test
     void flujoCompletoDeLosCasosDeUso() {
         Long id = servicio.crear(comando("¿Qué patrón aísla el dominio?")).getId();
 
