@@ -7,6 +7,7 @@ import co.edu.unicauca.saberpro.question.domain.model.Pregunta;
 import co.edu.unicauca.saberpro.question.domain.ports.inbound.CrearPreguntaComando;
 import co.edu.unicauca.saberpro.question.domain.ports.outbound.NotificacionPort;
 import co.edu.unicauca.saberpro.question.domain.ports.outbound.PreguntaRepositoryPort;
+import co.edu.unicauca.saberpro.question.domain.ports.outbound.ValidacionPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,13 +31,16 @@ class QuestionApplicationServiceTest {
 
     private RepositorioFalso repositorio;
     private NotificacionesFalsas notificaciones;
+    private List<String> erroresDeValidacion;
     private QuestionApplicationService servicio;
 
     @BeforeEach
     void preparar() {
         repositorio = new RepositorioFalso();
         notificaciones = new NotificacionesFalsas();
-        servicio = new QuestionApplicationService(repositorio, notificaciones);
+        erroresDeValidacion = new ArrayList<>();
+        ValidacionPort validacion = pregunta -> List.copyOf(erroresDeValidacion);
+        servicio = new QuestionApplicationService(repositorio, notificaciones, validacion);
     }
 
     private static CrearPreguntaComando comandoValido() {
@@ -56,8 +60,10 @@ class QuestionApplicationServiceTest {
 
     @Test
     void exigeLosPuertosDeSalida() {
-        assertThrows(NullPointerException.class, () -> new QuestionApplicationService(null, notificaciones));
-        assertThrows(NullPointerException.class, () -> new QuestionApplicationService(repositorio, null));
+        ValidacionPort validacion = pregunta -> List.of();
+        assertThrows(NullPointerException.class, () -> new QuestionApplicationService(null, notificaciones, validacion));
+        assertThrows(NullPointerException.class, () -> new QuestionApplicationService(repositorio, null, validacion));
+        assertThrows(NullPointerException.class, () -> new QuestionApplicationService(repositorio, notificaciones, null));
     }
 
     @Nested
@@ -78,6 +84,15 @@ class QuestionApplicationServiceTest {
             CrearPreguntaComando comando = new CrearPreguntaComando("Enunciado", "Corta", List.of());
 
             assertThrows(ReglaNegocioException.class, () -> servicio.crear(comando));
+            assertTrue(repositorio.findAll().isEmpty());
+        }
+
+        @Test
+        void noGuardaSiFallaLaValidacionEstructural() {
+            erroresDeValidacion.add("Debe tener exactamente 4 opciones.");
+
+            ReglaNegocioException e = assertThrows(ReglaNegocioException.class, () -> servicio.crear(comandoValido()));
+            assertTrue(e.getMessage().contains("Debe tener exactamente 4 opciones."));
             assertTrue(repositorio.findAll().isEmpty());
         }
 

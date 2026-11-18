@@ -14,6 +14,20 @@ Universidad del Cauca, 2026.2. Integra DDD, arquitectura hexagonal y microservic
 
 Todos los contenedores se comunican por la red bridge `saberpro-net`.
 
+## API de question-service (:8083)
+
+| Método y ruta | Respuesta |
+|---|---|
+| `GET /api/preguntas` | 200 con la lista |
+| `GET /api/preguntas/{id}` | 200, o 404 si no existe |
+| `POST /api/preguntas` | 201 con la pregunta y `Location`; 400 si incumple una regla o la validación de `validation-service`; 503 si `validation-service` no responde |
+| `POST /api/preguntas/{id}/enviar-revision` | 202 Accepted (la revisión sigue por RabbitMQ) |
+| `POST /api/preguntas/{id}/aprobar` | 200; body opcional `{"observaciones": "..."}` |
+| `POST /api/preguntas/{id}/rechazar` | 200; 400 si falta `{"observaciones": "..."}` |
+
+La URL de `validation-service` se configura con `VALIDATION_SERVICE_URL` (por defecto `http://localhost:8082`;
+en Docker, `http://validation-service:8082`).
+
 ## Estructura
 
 ```
@@ -28,7 +42,7 @@ saberpro-banco-preguntas/
 │   │   ├── exception/
 │   │   └── ports/{inbound,outbound}/
 │   ├── application/           servicios de aplicación
-│   ├── infrastructure/{jpa,memory,messaging,config}/
+│   ├── infrastructure/{jpa,memory,messaging,validation,config}/
 │   └── api/                   controlador REST
 └── lifecycle-service/         (:8084)  co.edu.unicauca.saberpro.lifecycle
     └── messaging/
