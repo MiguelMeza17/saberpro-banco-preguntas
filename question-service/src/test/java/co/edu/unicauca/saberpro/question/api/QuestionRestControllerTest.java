@@ -12,6 +12,7 @@ import co.edu.unicauca.saberpro.question.domain.ports.inbound.CrearPreguntaUseCa
 import co.edu.unicauca.saberpro.question.domain.ports.inbound.EvaluarPreguntaUseCase;
 import co.edu.unicauca.saberpro.question.infrastructure.validation.ServicioValidacionNoDisponibleException;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.AmqpConnectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -126,6 +127,14 @@ class QuestionRestControllerTest {
         mvc.perform(post("/api/preguntas/1/enviar-revision"))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.estado").value("PENDIENTE_REVISION"));
+    }
+
+    @Test
+    void enviarARevisionResponde503SiRabbitMQNoResponde() throws Exception {
+        when(crearPregunta.enviarARevision(1L)).thenThrow(new AmqpConnectException(new RuntimeException("refused")));
+
+        mvc.perform(post("/api/preguntas/1/enviar-revision"))
+                .andExpect(status().isServiceUnavailable());
     }
 
     @Test
