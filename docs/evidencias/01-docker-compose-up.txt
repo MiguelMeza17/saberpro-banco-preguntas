@@ -1,0 +1,204 @@
+$ docker compose up -d --build
+ Image saberpro/validation-service:latest Building 
+ Image saberpro/question-service:latest Building 
+ Image saberpro/lifecycle-service:latest Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.93kB done
+#1 DONE 0.0s
+
+#2 [validation-service internal] load build definition from Dockerfile
+#2 transferring dockerfile: 578B 0.0s done
+#2 DONE 0.1s
+
+#3 [question-service internal] load build definition from Dockerfile
+#3 transferring dockerfile: 578B 0.0s done
+#3 DONE 0.1s
+
+#4 [lifecycle-service internal] load build definition from Dockerfile
+#4 transferring dockerfile: 578B 0.0s done
+#4 DONE 0.1s
+
+#5 [validation-service internal] load metadata for docker.io/library/maven:3.9.9-eclipse-temurin-17
+#5 DONE 0.9s
+
+#6 [lifecycle-service internal] load metadata for docker.io/library/eclipse-temurin:17-jre
+#6 DONE 1.1s
+
+#7 [lifecycle-service internal] load .dockerignore
+#7 transferring context: 87B 0.2s done
+#7 DONE 0.2s
+
+#8 [validation-service internal] load .dockerignore
+#8 transferring context: 87B 0.2s done
+#8 DONE 0.2s
+
+#9 [question-service internal] load .dockerignore
+#9 transferring context: 87B 0.2s done
+#9 DONE 0.2s
+
+#10 [validation-service build 1/6] FROM docker.io/library/maven:3.9.9-eclipse-temurin-17@sha256:f58d59b6273e785ac0a4477f6e9b5ba1d7731c75b906c0f7b34076f1851318cc
+#10 resolve docker.io/library/maven:3.9.9-eclipse-temurin-17@sha256:f58d59b6273e785ac0a4477f6e9b5ba1d7731c75b906c0f7b34076f1851318cc 0.0s done
+#10 DONE 0.1s
+
+#11 [lifecycle-service stage-1 1/3] FROM docker.io/library/eclipse-temurin:17-jre@sha256:fb2cec8da84e3f086b59e29bf432d372e396fe0c247adcfb89303a28c2e313c0
+#11 resolve docker.io/library/eclipse-temurin:17-jre@sha256:fb2cec8da84e3f086b59e29bf432d372e396fe0c247adcfb89303a28c2e313c0 0.0s done
+#11 DONE 0.1s
+
+#12 [question-service internal] load build context
+#12 ...
+
+#13 [validation-service internal] load build context
+#13 transferring context: 2.27kB 1.3s done
+#13 DONE 1.4s
+
+#14 [lifecycle-service internal] load build context
+#14 transferring context: 2.29kB 1.3s done
+#14 DONE 1.4s
+
+#15 [validation-service build 3/6] COPY pom.xml .
+#15 CACHED
+
+#16 [validation-service build 5/6] COPY src ./src
+#16 CACHED
+
+#17 [validation-service build 4/6] RUN mvn -B -q dependency:go-offline
+#17 CACHED
+
+#18 [validation-service build 6/6] RUN mvn -B -q clean package -DskipTests
+#18 CACHED
+
+#19 [validation-service stage-1 3/3] COPY --from=build /build/target/*.jar app.jar
+#19 CACHED
+
+#20 [lifecycle-service build 2/6] WORKDIR /build
+#20 CACHED
+
+#21 [lifecycle-service build 4/6] RUN mvn -B -q dependency:go-offline
+#21 CACHED
+
+#22 [lifecycle-service stage-1 2/3] WORKDIR /app
+#22 CACHED
+
+#23 [lifecycle-service build 6/6] RUN mvn -B -q clean package -DskipTests
+#23 CACHED
+
+#24 [lifecycle-service build 3/6] COPY pom.xml .
+#24 CACHED
+
+#25 [lifecycle-service build 5/6] COPY src ./src
+#25 CACHED
+
+#26 [lifecycle-service stage-1 3/3] COPY --from=build /build/target/*.jar app.jar
+#26 CACHED
+
+#27 [validation-service] exporting to image
+#27 exporting layers done
+#27 exporting manifest sha256:7f5fb6953286c5b6aaf4015569ba92e3d069627aa45e2b54babbb5ea1243d563 done
+#27 exporting config sha256:39205ed7014e8289b497c02d15f567c241a2d93b3a6ac9e94de7532cd2d59a20 done
+#27 exporting attestation manifest sha256:77fc60ce35e50e8fb33b6e19b74efaf394c126072b6ee20e123483451e78b6fc 0.1s done
+#27 exporting manifest list sha256:9dde011bb4be1a8278f3a7eb74e78749cd3cf2bae7f025a3f1bbace3843147c7 0.0s done
+#27 naming to docker.io/saberpro/validation-service:latest
+#27 naming to docker.io/saberpro/validation-service:latest 0.0s done
+#27 unpacking to docker.io/saberpro/validation-service:latest 0.0s done
+#27 DONE 0.2s
+
+#28 [lifecycle-service] exporting to image
+#28 exporting layers done
+#28 exporting manifest sha256:0d6507a2037d007233ec964e7d8b48aa0c2df928d859d88913f3d80de96abcfa done
+#28 exporting config sha256:dcb0b72efb0ef7fc7876cf628f5f365c2db06673e7ef73dd12e899f3361ee442 done
+#28 exporting attestation manifest sha256:1412ebfc9d6be25d1230644e802e9ead64c74970a8b62dbe26dcd735a3f5670c 0.1s done
+#28 exporting manifest list sha256:4c3ad744e649711d22e60b5afa1e72c23d0c2b1b043e52f4410bdcdd20aa2b3c 0.0s done
+#28 naming to docker.io/saberpro/lifecycle-service:latest done
+#28 unpacking to docker.io/saberpro/lifecycle-service:latest 0.0s done
+#28 DONE 0.2s
+
+#12 [question-service internal] load build context
+#12 ...
+
+#29 [lifecycle-service] resolving provenance for metadata file
+#29 DONE 0.0s
+
+#30 [validation-service] resolving provenance for metadata file
+#30 DONE 0.0s
+
+#12 [question-service internal] load build context
+#12 transferring context: 36.58kB 4.3s done
+#12 DONE 4.3s
+
+#31 [question-service build 3/6] COPY pom.xml .
+#31 CACHED
+
+#20 [question-service build 2/6] WORKDIR /build
+#20 CACHED
+
+#32 [question-service build 4/6] RUN mvn -B -q dependency:go-offline
+#32 CACHED
+
+#33 [question-service build 5/6] COPY src ./src
+#33 DONE 0.1s
+
+#34 [question-service build 6/6] RUN mvn -B -q clean package -DskipTests
+#34 DONE 14.2s
+
+#22 [question-service stage-1 2/3] WORKDIR /app
+#22 CACHED
+
+#35 [question-service stage-1 3/3] COPY --from=build /build/target/*.jar app.jar
+#35 DONE 0.1s
+
+#36 [question-service] exporting to image
+#36 exporting layers
+#36 exporting layers 2.3s done
+#36 exporting manifest sha256:0d6984ec8f54551fbdf6793722f64ecd762417c90424d5f7a02e1ceed047cee8
+#36 exporting manifest sha256:0d6984ec8f54551fbdf6793722f64ecd762417c90424d5f7a02e1ceed047cee8 0.2s done
+#36 exporting config sha256:036fa17dfbcab7839351bd2486596bcf3541296011714b576c380f3c02107755
+#36 exporting config sha256:036fa17dfbcab7839351bd2486596bcf3541296011714b576c380f3c02107755 0.2s done
+#36 exporting attestation manifest sha256:02c663bff137b6bcab17580451e5d4deb41cd67a9d40e94fd54c44b276e2d515
+#36 exporting attestation manifest sha256:02c663bff137b6bcab17580451e5d4deb41cd67a9d40e94fd54c44b276e2d515 0.5s done
+#36 exporting manifest list sha256:c02788e7ff18cbbf43b6dc80a49af106f1b2d5dffa3fc053cd2782979cab7657
+#36 exporting manifest list sha256:c02788e7ff18cbbf43b6dc80a49af106f1b2d5dffa3fc053cd2782979cab7657 0.2s done
+#36 naming to docker.io/saberpro/question-service:latest
+#36 naming to docker.io/saberpro/question-service:latest 0.0s done
+#36 unpacking to docker.io/saberpro/question-service:latest
+#36 unpacking to docker.io/saberpro/question-service:latest 0.4s done
+#36 DONE 4.1s
+
+#37 [question-service] resolving provenance for metadata file
+#37 DONE 0.0s
+ Image saberpro/validation-service:latest Built 
+ Image saberpro/lifecycle-service:latest Built 
+ Image saberpro/question-service:latest Built 
+ Volume saberpro_saberpro-postgres-data Creating 
+ Network saberpro_saberpro-net Creating 
+ Volume saberpro_saberpro-postgres-data Creating 
+ Network saberpro_saberpro-net Creating 
+ Volume saberpro_saberpro-postgres-data Created 
+ Volume saberpro_saberpro-postgres-data Created 
+ Network saberpro_saberpro-net Created 
+ Network saberpro_saberpro-net Created 
+ Container saberpro-postgres Creating 
+ Container saberpro-validation-service Creating 
+ Container saberpro-rabbitmq Creating 
+ Container saberpro-validation-service Created 
+ Container saberpro-postgres Created 
+ Container saberpro-rabbitmq Created 
+ Container saberpro-lifecycle-service Creating 
+ Container saberpro-question-service Creating 
+ Container saberpro-lifecycle-service Created 
+ Container saberpro-question-service Created 
+ Container saberpro-validation-service Starting 
+ Container saberpro-postgres Starting 
+ Container saberpro-rabbitmq Starting 
+ Container saberpro-validation-service Started 
+ Container saberpro-postgres Started 
+ Container saberpro-rabbitmq Started 
+ Container saberpro-postgres Waiting 
+ Container saberpro-rabbitmq Waiting 
+ Container saberpro-rabbitmq Waiting 
+ Container saberpro-postgres Healthy 
+ Container saberpro-rabbitmq Healthy 
+ Container saberpro-rabbitmq Healthy 
+ Container saberpro-lifecycle-service Starting 
+ Container saberpro-question-service Starting 
+ Container saberpro-lifecycle-service Started 
+ Container saberpro-question-service Started 

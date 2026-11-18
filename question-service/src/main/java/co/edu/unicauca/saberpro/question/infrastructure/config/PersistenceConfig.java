@@ -4,6 +4,8 @@ import co.edu.unicauca.saberpro.question.domain.ports.outbound.PreguntaRepositor
 import co.edu.unicauca.saberpro.question.infrastructure.jpa.JpaQuestionAdapter;
 import co.edu.unicauca.saberpro.question.infrastructure.jpa.SpringDataQuestionRepository;
 import co.edu.unicauca.saberpro.question.infrastructure.memory.InMemoryQuestionAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PersistenceConfig {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PersistenceConfig.class);
+
     /**
      * Persistencia relacional con JPA (PostgreSQL en Docker, H2 en local).
      *
@@ -26,6 +30,7 @@ public class PersistenceConfig {
     @Bean
     @ConditionalOnProperty(name = "saberpro.persistencia", havingValue = "jpa", matchIfMissing = true)
     public PreguntaRepositoryPort jpaQuestionAdapter(SpringDataQuestionRepository repositorio) {
+        LOG.info("Persistencia activa: JpaQuestionAdapter (saberpro.persistencia=jpa)");
         return new JpaQuestionAdapter(repositorio);
     }
 
@@ -37,6 +42,7 @@ public class PersistenceConfig {
     @Bean
     @ConditionalOnProperty(name = "saberpro.persistencia", havingValue = "memoria")
     public PreguntaRepositoryPort inMemoryQuestionAdapter() {
+        LOG.info("Persistencia activa: InMemoryQuestionAdapter (saberpro.persistencia=memoria)");
         return new InMemoryQuestionAdapter();
     }
 }

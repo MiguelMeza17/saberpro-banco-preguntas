@@ -1,0 +1,43 @@
+### Con JPA (PostgreSQL): la pregunta creada sigue en la base de datos
+$ curl http://localhost:8083/api/preguntas
+[{"id":1,"enunciado":"¿Qué patrón aísla el dominio de la infraestructura?","justificacion":"Los puertos y adaptadores separan el núcleo de la tecnología.","opciones":[{"texto":"Hexagonal","esCorrecta":true},{"texto":"Singleton","esCorrecta":false},{"texto":"Monolito","esCorrecta":false},{"texto":"Capas","esCorrecta":false}],"estado":"PENDIENTE_REVISION","observaciones":null}]
+
+### Cambio a memoria sin tocar el codigo
+$ SABERPRO_PERSISTENCIA=memoria docker compose up -d question-service
+ Container saberpro-postgres Running 
+ Container saberpro-validation-service Running 
+ Container saberpro-rabbitmq Running 
+ Container saberpro-question-service Recreate 
+ Container saberpro-question-service Recreated 
+ Container saberpro-rabbitmq Waiting 
+ Container saberpro-postgres Waiting 
+ Container saberpro-rabbitmq Healthy 
+ Container saberpro-postgres Healthy 
+ Container saberpro-question-service Starting 
+ Container saberpro-question-service Started 
+$ docker logs saberpro-question-service | grep 'Persistencia activa'
+2026-11-18T23:18:51.736Z  INFO 1 --- [question-service] [           main] c.e.u.s.q.i.config.PersistenceConfig     : Persistencia activa: InMemoryQuestionAdapter (saberpro.persistencia=memoria)
+$ curl http://localhost:8083/api/preguntas   # HashMap vacio
+[]
+$ curl -X POST http://localhost:8083/api/preguntas (mismos casos de uso)
+HTTP 201
+$ curl -X POST http://localhost:8083/api/preguntas/1/enviar-revision
+HTTP 202
+
+### Vuelta a JPA: reaparecen los datos de PostgreSQL
+$ docker compose up -d question-service
+ Container saberpro-rabbitmq Running 
+ Container saberpro-postgres Running 
+ Container saberpro-validation-service Running 
+ Container saberpro-question-service Recreate 
+ Container saberpro-question-service Recreated 
+ Container saberpro-postgres Waiting 
+ Container saberpro-rabbitmq Waiting 
+ Container saberpro-postgres Healthy 
+ Container saberpro-rabbitmq Healthy 
+ Container saberpro-question-service Starting 
+ Container saberpro-question-service Started 
+$ docker logs saberpro-question-service | grep 'Persistencia activa'
+2026-11-18T23:18:59.356Z  INFO 1 --- [question-service] [           main] c.e.u.s.q.i.config.PersistenceConfig     : Persistencia activa: JpaQuestionAdapter (saberpro.persistencia=jpa)
+$ curl http://localhost:8083/api/preguntas
+[{"id":1,"enunciado":"¿Qué patrón aísla el dominio de la infraestructura?","justificacion":"Los puertos y adaptadores separan el núcleo de la tecnología.","opciones":[{"texto":"Hexagonal","esCorrecta":true},{"texto":"Singleton","esCorrecta":false},{"texto":"Monolito","esCorrecta":false},{"texto":"Capas","esCorrecta":false}],"estado":"PENDIENTE_REVISION","observaciones":null}]

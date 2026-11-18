@@ -76,6 +76,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=saberpro
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SABERPRO_VALIDATION_URL=http://validation-service:8082
+      # jpa (PostgreSQL, por defecto) o memoria: SABERPRO_PERSISTENCIA=memoria docker compose up -d question-service
+      - SABERPRO_PERSISTENCIA=${SABERPRO_PERSISTENCIA:-jpa}
     depends_on:
       rabbitmq:
         condition: service_healthy

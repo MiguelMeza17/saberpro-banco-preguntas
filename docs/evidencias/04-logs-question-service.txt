@@ -1,0 +1,4 @@
+$ docker logs saberpro-question-service | grep -E 'Persistencia activa|Started|RabbitMQPublisher'
+2026-11-18T23:18:36.614Z  INFO 1 --- [question-service] [           main] c.e.u.s.q.i.config.PersistenceConfig     : Persistencia activa: JpaQuestionAdapter (saberpro.persistencia=jpa)
+2026-11-18T23:18:37.187Z  INFO 1 --- [question-service] [           main] c.e.u.s.q.QuestionServiceApplication     : Started QuestionServiceApplication in 9.057 seconds (process running for 9.983)
+2026-11-18T23:18:40.291Z  INFO 1 --- [question-service] [nio-8083-exec-4] c.e.u.s.q.i.messaging.RabbitMQPublisher  : Solicitud de revisión publicada en pregunta.revisar.queue: pregunta id=1, estado=PENDIENTE_REVISION
