@@ -1,0 +1,12 @@
+flowchart TB
+    autor["<b>Autor de preguntas</b><br/>[Persona]<br/>Crea preguntas y las envía a revisión"]
+    revisor["<b>Revisor</b><br/>[Persona]<br/>Aprueba o rechaza con observaciones"]
+    admin["<b>Administrador</b><br/>[Persona]<br/>Supervisa el banco y las revisiones"]
+    sistema["<b>Sistema Banco de Preguntas Saber Pro</b><br/>[Sistema de software]<br/>Autoría, validación estructural (HU03)<br/>y ciclo de vida de las preguntas"]
+    autor -- "Crea y envía a revisión<br/>[REST / JSON]" --> sistema
+    revisor -- "Evalúa preguntas<br/>[REST / JSON]" --> sistema
+    admin -- "Consulta preguntas y revisiones asignadas<br/>[REST / JSON]" --> sistema
+    style sistema fill:#0b3a75,color:#ffffff,stroke:#0b3a75
+    style autor fill:#08427b,color:#ffffff,stroke:#052e56
+    style revisor fill:#08427b,color:#ffffff,stroke:#052e56
+    style admin fill:#08427b,color:#ffffff,stroke:#052e56

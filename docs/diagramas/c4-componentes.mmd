@@ -1,0 +1,39 @@
+flowchart TB
+    cliente["Cliente HTTP"]
+    vs["validation-service :8082"]
+    mq[("rabbitmq")]
+    db[("postgres / H2")]
+    subgraph qs["question-service :8083"]
+        subgraph api["api (adaptador de entrada)"]
+            ctrl["<b>QuestionRestController</b><br/>DTOs + ApiExceptionHandler"]
+        end
+        subgraph dominio["domain (Java puro)"]
+            in["<b>Puertos de entrada</b><br/>CrearPreguntaUseCase<br/>EvaluarPreguntaUseCase"]
+            agg["<b>Agregado Pregunta</b><br/>Enunciado, Justificacion,<br/>OpcionRespuesta, EstadoPregunta"]
+            out["<b>Puertos de salida</b><br/>PreguntaRepositoryPort<br/>ValidacionPort<br/>NotificacionPort"]
+        end
+        subgraph app["application"]
+            srv["<b>QuestionApplicationService</b><br/>Orquesta los casos de uso"]
+        end
+        subgraph infra["infrastructure (adaptadores de salida)"]
+            jpa["<b>JpaQuestionAdapter</b><br/>QuestionRecord + QuestionDomainMapper"]
+            mem["<b>InMemoryQuestionAdapter</b><br/>HashMap"]
+            val["<b>ValidationServiceClient</b><br/>RestClient"]
+            pub["<b>RabbitMQPublisher</b><br/>Spring AMQP"]
+            cfg["<b>Configuración @Bean</b><br/>Elige JPA o memoria"]
+        end
+    end
+    cliente --> ctrl --> in
+    srv -. "implementa" .-> in
+    srv --> agg
+    srv --> out
+    jpa -. "implementa" .-> out
+    mem -. "implementa" .-> out
+    val -. "implementa" .-> out
+    pub -. "implementa" .-> out
+    cfg -. "registra" .-> srv
+    jpa --> db
+    val --> vs
+    pub --> mq
+    style dominio fill:#fff4d6,stroke:#c99a1a
+    style app fill:#e6f0ff,stroke:#1168bd

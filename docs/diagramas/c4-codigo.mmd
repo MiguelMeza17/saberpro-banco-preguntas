@@ -1,0 +1,80 @@
+classDiagram
+    direction LR
+    class Pregunta {
+        <<Aggregate Root>>
+        -Long id
+        -Enunciado enunciado
+        -Justificacion justificacion
+        -List~OpcionRespuesta~ opciones
+        -EstadoPregunta estado
+        -String observaciones
+        +reconstituir(...)$ Pregunta
+        +agregarOpcion(texto, esCorrecta)
+        +enviarARevision()
+        +aprobar(observaciones)
+        +rechazar(observaciones)
+        +publicar()
+        +archivar()
+    }
+    class Enunciado {
+        <<Value Object>>
+        -String texto
+    }
+    class Justificacion {
+        <<Value Object>>
+        +LONGITUD_MINIMA = 15
+        -String texto
+    }
+    class OpcionRespuesta {
+        <<Value Object>>
+        -String texto
+        -boolean esCorrecta
+    }
+    class EstadoPregunta {
+        <<enumeration>>
+        BORRADOR
+        PENDIENTE_REVISION
+        EN_REVISION
+        APROBADA
+        RECHAZADA
+        PUBLICADA
+        ARCHIVADA
+        +puedeTransitarA(destino) boolean
+    }
+    class CrearPreguntaUseCase {
+        <<interface>>
+        +crear(CrearPreguntaComando) Pregunta
+        +enviarARevision(id) Pregunta
+        +listar() List~Pregunta~
+        +obtener(id) Pregunta
+    }
+    class EvaluarPreguntaUseCase {
+        <<interface>>
+        +aprobar(id, observaciones) Pregunta
+        +rechazar(id, observaciones) Pregunta
+    }
+    class PreguntaRepositoryPort {
+        <<interface>>
+        +save(Pregunta) Pregunta
+        +findById(id) Optional~Pregunta~
+        +findAll() List~Pregunta~
+    }
+    class ValidacionPort {
+        <<interface>>
+        +validar(Pregunta) List~String~
+    }
+    class NotificacionPort {
+        <<interface>>
+        +notificarEnvioARevision(Pregunta)
+    }
+    class QuestionApplicationService
+    Pregunta *-- "1" Enunciado
+    Pregunta *-- "1" Justificacion
+    Pregunta *-- "0..4" OpcionRespuesta
+    Pregunta --> EstadoPregunta
+    QuestionApplicationService ..|> CrearPreguntaUseCase
+    QuestionApplicationService ..|> EvaluarPreguntaUseCase
+    QuestionApplicationService --> PreguntaRepositoryPort
+    QuestionApplicationService --> ValidacionPort
+    QuestionApplicationService --> NotificacionPort
+    QuestionApplicationService ..> Pregunta
