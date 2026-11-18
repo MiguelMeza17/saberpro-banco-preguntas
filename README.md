@@ -57,3 +57,25 @@ docker compose up -d --build
 docker ps
 docker logs -f saberpro-question-service
 ```
+
+`docker compose up -d --build` levanta 5 contenedores en la red `saberpro-net`:
+
+| Contenedor | Imagen | Puertos | Arranca después de |
+|---|---|---|---|
+| `saberpro-rabbitmq` | `rabbitmq:3-management` | 5672, 15672 | — |
+| `saberpro-postgres` | `postgres:16-alpine` | 5432 | — |
+| `saberpro-validation-service` | build `./validation-service` | 8082 | — |
+| `saberpro-question-service` | build `./question-service` | 8083 | RabbitMQ y PostgreSQL sanos, validation-service |
+| `saberpro-lifecycle-service` | build `./lifecycle-service` | 8084 | RabbitMQ sano |
+
+Variables que inyecta el compose (en local se usan los valores por defecto de `application.properties`):
+
+| Servicio | Variable | Valor en Docker | Valor local |
+|---|---|---|---|
+| question-service | `SPRING_DATASOURCE_URL` | `jdbc:postgresql://postgres:5432/saberprodb` | H2 en memoria |
+| question-service | `SABERPRO_VALIDATION_URL` | `http://validation-service:8082` | `http://localhost:8082` |
+| question-service, lifecycle-service | `SPRING_RABBITMQ_HOST` | `rabbitmq` | `localhost` |
+
+- Consola de RabbitMQ: <http://localhost:15672> (`guest` / `guest`), cola `pregunta.revisar.queue`.
+- Revisiones recibidas por lifecycle-service: `GET http://localhost:8084/api/revisiones`.
+- Detener todo: `docker compose down` (añadir `-v` para borrar también los datos de PostgreSQL).
