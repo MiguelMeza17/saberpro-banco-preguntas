@@ -28,7 +28,7 @@ saberpro-banco-preguntas/
 │   │   ├── exception/
 │   │   └── ports/{inbound,outbound}/
 │   ├── application/           servicios de aplicación
-│   ├── infrastructure/{jpa,memory,messaging}/
+│   ├── infrastructure/{jpa,memory,messaging,config}/
 │   └── api/                   controlador REST
 └── lifecycle-service/         (:8084)  co.edu.unicauca.saberpro.lifecycle
     └── messaging/
