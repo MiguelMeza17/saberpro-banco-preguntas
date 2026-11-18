@@ -1,0 +1,370 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "SaberPro - Banco de Preguntas (Taller 13)",
+  "collectionId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+  "dateExported": "2026-11-18T23:40:00.000Z",
+  "version": "1.2",
+  "folders": [],
+  "requests": [
+    {
+      "_id": "bdc07a44-edee-5b34-931f-3a80d4007e58",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "01 GET listar preguntas (200)",
+      "url": "http://localhost:8083/api/preguntas",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "5882d2b5-44e8-52b4-af45-fea9909886ab",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "02 POST crear pregunta válida (201)",
+      "url": "http://localhost:8083/api/preguntas",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"enunciado\": \"¿Qué patrón aísla el dominio de la infraestructura?\",\n  \"justificacion\": \"Los puertos y adaptadores separan el núcleo de la tecnología.\",\n  \"opciones\": [\n    {\n      \"texto\": \"Hexagonal\",\n      \"esCorrecta\": true\n    },\n    {\n      \"texto\": \"Singleton\",\n      \"esCorrecta\": false\n    },\n    {\n      \"texto\": \"Monolito\",\n      \"esCorrecta\": false\n    },\n    {\n      \"texto\": \"Capas\",\n      \"esCorrecta\": false\n    }\n  ]\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "fd09df3b-c630-57fb-a41f-ec4861756741",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "03 POST justificación corta (400)",
+      "url": "http://localhost:8083/api/preguntas",
+      "method": "POST",
+      "sortNum": 30000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"enunciado\": \"Pregunta inválida\",\n  \"justificacion\": \"Corta\",\n  \"opciones\": [\n    {\n      \"texto\": \"A\",\n      \"esCorrecta\": true\n    },\n    {\n      \"texto\": \"B\",\n      \"esCorrecta\": false\n    },\n    {\n      \"texto\": \"C\",\n      \"esCorrecta\": false\n    },\n    {\n      \"texto\": \"D\",\n      \"esCorrecta\": false\n    }\n  ]\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "b20d810e-1cb1-594b-bcf6-2696a088a701",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "04 POST dos claves, rechaza validation-service (400)",
+      "url": "http://localhost:8083/api/preguntas",
+      "method": "POST",
+      "sortNum": 40000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"enunciado\": \"Pregunta con dos claves\",\n  \"justificacion\": \"Justificación con suficiente detalle.\",\n  \"opciones\": [\n    {\n      \"texto\": \"A\",\n      \"esCorrecta\": true\n    },\n    {\n      \"texto\": \"B\",\n      \"esCorrecta\": true\n    },\n    {\n      \"texto\": \"C\",\n      \"esCorrecta\": false\n    },\n    {\n      \"texto\": \"D\",\n      \"esCorrecta\": false\n    }\n  ]\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "a2d87f7d-a6f4-51e0-9f09-1ebb1812721c",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "05 GET pregunta 1 (200)",
+      "url": "http://localhost:8083/api/preguntas/1",
+      "method": "GET",
+      "sortNum": 50000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "2f8ff31f-5d79-5550-bd11-1fc1600b16b0",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "06 GET pregunta inexistente (404)",
+      "url": "http://localhost:8083/api/preguntas/999",
+      "method": "GET",
+      "sortNum": 60000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "404"
+        }
+      ]
+    },
+    {
+      "_id": "71db0677-294c-55d9-98a7-c12b96aec512",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "07 POST enviar-revision pregunta 1 (202)",
+      "url": "http://localhost:8083/api/preguntas/1/enviar-revision",
+      "method": "POST",
+      "sortNum": 70000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "202"
+        }
+      ]
+    },
+    {
+      "_id": "3d3c18ed-fa38-5be4-b453-7a262f1e008f",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "08 GET revisiones en lifecycle-service (200)",
+      "url": "http://localhost:8084/api/revisiones",
+      "method": "GET",
+      "sortNum": 80000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "a638786a-49a7-56b2-a584-948020a2681c",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "09 POST rechazar sin observaciones (400)",
+      "url": "http://localhost:8083/api/preguntas/1/rechazar",
+      "method": "POST",
+      "sortNum": 90000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{}",
+        "form": []
+      }
+    },
+    {
+      "_id": "f09a6790-35ac-5f88-8c3f-1a7eb1eddade",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "10 POST aprobar pregunta 1 (200)",
+      "url": "http://localhost:8083/api/preguntas/1/aprobar",
+      "method": "POST",
+      "sortNum": 100000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"observaciones\": \"Bien planteada\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "d199530c-a0c0-5d21-84be-41f8d02ffd3f",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "11 POST crear segunda pregunta (201)",
+      "url": "http://localhost:8083/api/preguntas",
+      "method": "POST",
+      "sortNum": 110000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"enunciado\": \"¿Qué componente consume pregunta.revisar.queue?\",\n  \"justificacion\": \"lifecycle-service escucha la cola con @RabbitListener.\",\n  \"opciones\": [\n    {\n      \"texto\": \"lifecycle-service\",\n      \"esCorrecta\": true\n    },\n    {\n      \"texto\": \"validation-service\",\n      \"esCorrecta\": false\n    },\n    {\n      \"texto\": \"PostgreSQL\",\n      \"esCorrecta\": false\n    },\n    {\n      \"texto\": \"question-service\",\n      \"esCorrecta\": false\n    }\n  ]\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "c4210059-0e55-5cc0-b896-8bcebb75ad6a",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "12 POST enviar-revision pregunta 2 (202)",
+      "url": "http://localhost:8083/api/preguntas/2/enviar-revision",
+      "method": "POST",
+      "sortNum": 120000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "202"
+        }
+      ]
+    },
+    {
+      "_id": "11aff847-1e6e-5415-935e-64962f222200",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "13 POST rechazar pregunta 2 con observaciones (200)",
+      "url": "http://localhost:8083/api/preguntas/2/rechazar",
+      "method": "POST",
+      "sortNum": 130000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"observaciones\": \"Mejorar los distractores\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "fdd6e9bd-7732-5c78-88e6-798915ca6dc8",
+      "colId": "9e5a4dc3-5c36-593f-acc0-28cbf65ef733",
+      "containerId": "",
+      "name": "14 POST validation-service directo (200)",
+      "url": "http://localhost:8082/api/validaciones",
+      "method": "POST",
+      "sortNum": 140000,
+      "created": "2026-11-18T23:40:00.000Z",
+      "modified": "2026-11-18T23:40:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"enunciado\": \"Pregunta con dos claves\",\n  \"justificacion\": \"Justificación con suficiente detalle.\",\n  \"opciones\": [\n    {\n      \"texto\": \"A\",\n      \"esCorrecta\": true\n    },\n    {\n      \"texto\": \"B\",\n      \"esCorrecta\": true\n    },\n    {\n      \"texto\": \"C\",\n      \"esCorrecta\": false\n    },\n    {\n      \"texto\": \"D\",\n      \"esCorrecta\": false\n    }\n  ]\n}",
+        "form": []
+      }
+    }
+  ]
+}
