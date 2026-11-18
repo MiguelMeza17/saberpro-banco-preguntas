@@ -1,8 +1,103 @@
-# Orquestador multi-contenedor del Banco de Preguntas Saber Pro.
-# Los servicios (rabbitmq, base de datos, validation-service, question-service y lifecycle-service)
-# se agregan en el issue #10.
+# Orquestador multi-contenedor del Banco de Preguntas Saber Pro (Taller 13, seccion 4.3 de la guia).
+#   docker compose up -d --build
+#   docker ps
+#   docker logs -f saberpro-question-service
+#
+# Todos los contenedores comparten la red bridge saberpro-net y se resuelven por nombre de servicio
+# (rabbitmq, postgres, validation-service...). RabbitMQ y PostgreSQL tienen healthcheck para que los
+# microservicios arranquen solo cuando la infraestructura ya acepta conexiones.
 name: saberpro
 
 networks:
   saberpro-net:
     driver: bridge
+
+volumes:
+  saberpro-postgres-data:
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: saberpro-rabbitmq
+    ports:
+      - "5672:5672"     # AMQP
+      - "15672:15672"   # consola de administracion (guest / guest)
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - saberpro-net
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: saberpro-postgres
+    environment:
+      - POSTGRES_DB=saberprodb
+      - POSTGRES_USER=saberpro
+      - POSTGRES_PASSWORD=saberpro
+    ports:
+      - "5432:5432"
+    volumes:
+      - saberpro-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saberpro -d saberprodb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - saberpro-net
+
+  validation-service:
+    build: ./validation-service
+    image: saberpro/validation-service:latest
+    container_name: saberpro-validation-service
+    ports:
+      - "8082:8082"
+    restart: on-failure
+    networks:
+      - saberpro-net
+
+  question-service:
+    build: ./question-service
+    image: saberpro/question-service:latest
+    container_name: saberpro-question-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/saberprodb
+      - SPRING_DATASOURCE_USERNAME=saberpro
+      - SPRING_DATASOURCE_PASSWORD=saberpro
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SABERPRO_VALIDATION_URL=http://validation-service:8082
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      validation-service:
+        condition: service_started
+    restart: on-failure
+    networks:
+      - saberpro-net
+
+  lifecycle-service:
+    build: ./lifecycle-service
+    image: saberpro/lifecycle-service:latest
+    container_name: saberpro-lifecycle-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - saberpro-net
