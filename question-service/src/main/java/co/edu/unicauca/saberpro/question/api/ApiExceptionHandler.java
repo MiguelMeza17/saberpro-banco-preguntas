@@ -3,6 +3,7 @@ package co.edu.unicauca.saberpro.question.api;
 import co.edu.unicauca.saberpro.question.domain.exception.PreguntaNoEncontradaException;
 import co.edu.unicauca.saberpro.question.domain.exception.ReglaNegocioException;
 import co.edu.unicauca.saberpro.question.infrastructure.validation.ServicioValidacionNoDisponibleException;
+import org.springframework.amqp.AmqpException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -50,6 +51,13 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ServicioValidacionNoDisponibleException.class)
     public ResponseEntity<ErrorResponse> validacionNoDisponible(ServicioValidacionNoDisponibleException e) {
         return respuesta(HttpStatus.SERVICE_UNAVAILABLE, "Servicio no disponible", e.getMessage());
+    }
+
+    /** RabbitMQ caído al publicar el envío a revisión → 503. */
+    @ExceptionHandler(AmqpException.class)
+    public ResponseEntity<ErrorResponse> brokerNoDisponible(AmqpException e) {
+        return respuesta(HttpStatus.SERVICE_UNAVAILABLE, "Servicio no disponible",
+                "No se pudo publicar el envío a revisión en RabbitMQ.");
     }
 
     private static ResponseEntity<ErrorResponse> respuesta(HttpStatus estado, String error, String mensaje) {
