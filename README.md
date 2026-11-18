@@ -88,6 +88,7 @@ Variables que inyecta el compose (en local se usan los valores por defecto de `a
 |---|---|---|---|
 | question-service | `SPRING_DATASOURCE_URL` | `jdbc:postgresql://postgres:5432/saberprodb` | H2 en memoria |
 | question-service | `SABERPRO_VALIDATION_URL` | `http://validation-service:8082` | `http://localhost:8082` |
+| question-service | `SABERPRO_PERSISTENCIA` | `jpa` (PostgreSQL) | `jpa` (H2); `memoria` usa el `InMemoryQuestionAdapter` |
 | question-service, lifecycle-service | `SPRING_RABBITMQ_HOST` | `rabbitmq` | `localhost` |
 
 - Consola de RabbitMQ: <http://localhost:15672> (`guest` / `guest`), cola `pregunta.revisar.queue`.
