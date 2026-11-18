@@ -25,7 +25,7 @@ Todos los contenedores se comunican por la red bridge `saberpro-net`.
 | `POST /api/preguntas/{id}/aprobar` | 200; body opcional `{"observaciones": "..."}` |
 | `POST /api/preguntas/{id}/rechazar` | 200; 400 si falta `{"observaciones": "..."}` |
 
-La URL de `validation-service` se configura con `VALIDATION_SERVICE_URL` (por defecto `http://localhost:8082`;
+La URL de `validation-service` se configura con `SABERPRO_VALIDATION_URL` (por defecto `http://localhost:8082`;
 en Docker, `http://validation-service:8082`).
 
 ## Estructura

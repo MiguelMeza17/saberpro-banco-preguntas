@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Adaptador de salida que implementa {@link ValidacionPort} llamando de forma síncrona a
- * {@code POST /api/validaciones} de validation-service. La URL base sale de {@code validation.service.url}
+ * {@code POST /api/validaciones} de validation-service. La URL base sale de {@code saberpro.validation.url}
  * (en Docker, {@code http://validation-service:8082}).
  */
 @Component
@@ -27,7 +27,7 @@ public class ValidationServiceClient implements ValidacionPort {
      * @param baseUrl URL base de validation-service
      */
     public ValidationServiceClient(RestClient.Builder builder,
-                                   @Value("${validation.service.url}") String baseUrl) {
+                                   @Value("${saberpro.validation.url}") String baseUrl) {
         this.restClient = builder.baseUrl(baseUrl).build();
     }
 
