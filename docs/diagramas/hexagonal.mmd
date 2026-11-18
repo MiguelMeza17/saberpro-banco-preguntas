@@ -1,0 +1,26 @@
+flowchart LR
+    subgraph entrada["Adaptadores de entrada (driving)"]
+        rest["QuestionRestController<br/>REST /api/preguntas"]
+    end
+    subgraph hexagono["Hexágono de question-service"]
+        direction TB
+        pin["Puertos de entrada<br/>CrearPreguntaUseCase<br/>EvaluarPreguntaUseCase"]
+        srv["QuestionApplicationService"]
+        dom["Dominio puro<br/>Pregunta + Value Objects<br/>sin Spring ni JPA"]
+        pout["Puertos de salida<br/>PreguntaRepositoryPort<br/>ValidacionPort<br/>NotificacionPort"]
+        pin --> srv --> dom
+        srv --> pout
+    end
+    subgraph salida["Adaptadores de salida (driven)"]
+        jpa["JpaQuestionAdapter<br/>PostgreSQL / H2"]
+        mem["InMemoryQuestionAdapter<br/>HashMap"]
+        val["ValidationServiceClient<br/>validation-service :8082"]
+        pub["RabbitMQPublisher<br/>pregunta.revisar.queue"]
+    end
+    rest --> pin
+    pout -. "implementado por" .-> jpa
+    pout -. "implementado por" .-> mem
+    pout -. "implementado por" .-> val
+    pout -. "implementado por" .-> pub
+    style hexagono fill:#fff4d6,stroke:#c99a1a
+    style dom fill:#ffe9a8,stroke:#c99a1a

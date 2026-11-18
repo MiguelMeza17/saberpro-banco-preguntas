@@ -1,0 +1,18 @@
+flowchart TB
+    cliente["<b>Cliente HTTP</b><br/>[Thunder Client / navegador]<br/>Autor, revisor, administrador"]
+    subgraph red["Red Docker bridge: saberpro-net"]
+        vs["<b>validation-service</b><br/>[Spring Boot] :8082<br/>Validación estructural HU03<br/>(Pipes & Filters)"]
+        qs["<b>question-service</b><br/>[Spring Boot] :8083<br/>Dominio DDD y arquitectura hexagonal"]
+        ls["<b>lifecycle-service</b><br/>[Spring Boot] :8084<br/>Consume envíos a revisión<br/>y asigna revisores"]
+        mq[("<b>rabbitmq</b><br/>[RabbitMQ 3 management]<br/>:5672 AMQP / :15672 consola<br/>pregunta.revisar.queue")]
+        db[("<b>postgres</b><br/>[PostgreSQL 16]<br/>:5432 saberprodb")]
+    end
+    cliente -- "/api/preguntas<br/>[REST / JSON]" --> qs
+    cliente -- "/api/revisiones<br/>[REST / JSON]" --> ls
+    qs -- "POST /api/validaciones<br/>[REST síncrono]" --> vs
+    qs -- "Lee y escribe preguntas<br/>[JDBC / JPA]" --> db
+    qs -- "Publica SolicitudRevision<br/>[AMQP, pregunta.exchange]" --> mq
+    mq -- "Entrega mensajes<br/>[@RabbitListener]" --> ls
+    style qs fill:#1168bd,color:#ffffff,stroke:#0b4884
+    style vs fill:#1168bd,color:#ffffff,stroke:#0b4884
+    style ls fill:#1168bd,color:#ffffff,stroke:#0b4884

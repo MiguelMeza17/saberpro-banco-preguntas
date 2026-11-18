@@ -1,0 +1,29 @@
+sequenceDiagram
+    actor Autor
+    participant C as QuestionRestController
+    participant S as QuestionApplicationService
+    participant P as Pregunta (agregado)
+    participant V as validation-service :8082
+    participant R as PreguntaRepositoryPort
+    participant N as RabbitMQPublisher
+    participant MQ as RabbitMQ<br/>pregunta.revisar.queue
+    participant L as lifecycle-service :8084
+    Autor->>C: POST /api/preguntas
+    C->>S: crear(comando)
+    S->>P: new Pregunta + agregarOpcion x4 (invariantes)
+    S->>V: POST /api/validaciones
+    V-->>S: {valida: true, errores: []}
+    S->>R: save(pregunta)
+    R-->>S: pregunta con id (BORRADOR)
+    C-->>Autor: 201 Created + Location
+    Autor->>C: POST /api/preguntas/{id}/enviar-revision
+    C->>S: enviarARevision(id)
+    S->>R: findById(id)
+    S->>P: enviarARevision() (4 opciones, 1 clave)
+    S->>R: save(pregunta PENDIENTE_REVISION)
+    S->>N: notificarEnvioARevision(pregunta)
+    N-)MQ: SolicitudRevisionMessage (JSON)
+    C-->>Autor: 202 Accepted
+    MQ-)L: QuestionReviewListener.recibir(mensaje)
+    L->>L: AsignacionRevisores.asignar() (round-robin)
+    Note over L: docker logs -f saberpro-lifecycle-service<br/>muestra el mensaje recibido
