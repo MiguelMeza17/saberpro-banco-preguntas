@@ -95,6 +95,11 @@ Variables que inyecta el compose (en local se usan los valores por defecto de `a
 - Revisiones recibidas por lifecycle-service: `GET http://localhost:8084/api/revisiones`.
 - Detener todo: `docker compose down` (añadir `-v` para borrar también los datos de PostgreSQL).
 
+## Informe
+
+Informe técnico final (formato del laboratorio): [`docs/informe/lisw2_taller13_g1.docx`](docs/informe/lisw2_taller13_g1.docx)
+(y su [PDF](docs/informe/lisw2_taller13_g1.pdf)).
+
 ## Pruebas de la API
 
 Colección de Thunder Client con 14 requests y sus tests en
